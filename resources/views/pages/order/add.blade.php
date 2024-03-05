@@ -1,143 +1,264 @@
-@extends('layout.app ')
-​
-@section('title')
-<title>Transaksi</title>
-@endsection
-​
-@section('css')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-@endsection
-​
-@section('content')
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Transaksi</h1>
-            </div>
-            <div class="col-sm-6">
-             <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Transaksi</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <table class="table table-stripped">
-                <thead>
-                    <tr>
-                        <th scope="col">no</th>
-                        <th scope="col">nama</th>
-                        <th scope="col">harga</th>
-                        <th scope="col">persediaan</th>
-                        <th scope="col">action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>surabi seblak</td>
-                        <td>5000</td>
-                        <td>5</td>
-                        <td>edit hapus</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>surabi coklat</td>
-                        <td>5000</td>
-                        <td>5</td>
-                        <td>edit hapus</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>surabi gacoan</td>
-                        <td>20.000</td>
-                        <td>5</td>
-                        <td>edit hapus</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-​
-{{-- <section class="content" id="dw">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                {{-- @card
-                @slot('title')
+<?php
 
-                @endslot --}}
-                ​
-                {{-- <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="">Produk</label>
-                            <select name="product_id" id="product_id" class="form-control" required width="100%">
-                                <option value="">Pilih</option>
-                                @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->code }} - {{ $product->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Qty</label>
-                            <input type="number" name="qty" id="qty" value="1" min="1" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary btn-sm">
-                                <i class="fa fa-shopping-cart"></i> Ke Keranjang
-                            </button>
-                        </div>
-                    </div>
+require 'konek.php';
+
+$id = $_GET['id'];
+
+$sql1 = "SELECT * FROM spp WHERE id_spp = $id";
+$query1 = mysqli_query($conn, $sql1);
+$spp = mysqli_fetch_assoc($query1);
 
 
-                    <div class="col-md-5">
-                        <h4>Detail Produk</h4>
-                        <div v-if="product.name">
-                            <table class="table table-stripped">
-                                <tr>
-                                    <th>Kode</th>
-                                    <td>:</td>
-                                    <td>@{{ product.code }}</td>
-                                </tr>
-                                <tr>
-                                    <th width="3%">Produk</th>
-                                    <td width="2%">:</td>
-                                    <td>@{{ product.name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Harga</th>
-                                    <td>:</td>
-                                    <td>@{{ product.price | currency }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+if(isset($_POST['kirim'])){
+
+    $id = $_POST['id_spp'];
+    $tahun = $_POST['tahun'];
+    $nominal = $_POST['nominal'];
+
+    $sql = "UPDATE spp SET tahun='$tahun', nominal='$nominal' WHERE id_spp=$id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+        header('Location:index.php?link=spp');
+    } else{
+
+        echo"<script>
+            alert('data gagal diubah');
+        </scrupt>";
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulir Edit Siswa | SMK Coding</title>
+</head>
+
+<body>
+    <header>
+        <h3>Formulir Edit Siswa</h3>
+    </header>
+
+    <form action="" method="post">
+
+            <input type="hidden" name="id_spp" value="<?php echo $spp['id_spp']; ?>" />
+
+        <p>
+            <label for="tahun">Tahun: </label>
+            <input type="text" name="tahun" value="<?php echo $spp['tahun']; ?>" />
+        </p>
+        <p>
+            <label for="nomina">Nominal: </label>
+            <input type="text" name="nominal" value="<?php echo $spp['nominal'];?>">
+        </p>
+        <p>
+            <button type="submit" name="kirim">Kirim</button>
+        </p>
 
 
-                    <div class="col-md-3" v-if="product.photo">
-                        <img :src="'/uploads/product/' + product.photo" height="150px" width="150px"
-                            :alt="product.name">
-                    </div>
-                </div>
-                @slot('footer')
-                ​
-                @endslot
-                @endcard
-            </div>
-        </div>
-    </div>
-</section> --}}
-@endsection
-​
-@section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/accounting.js/0.4.1/accounting.min.js"></script>
-<script src="{{ asset('js/transaksi.js') }}"></script>
-@endsection
+    </form>
+
+    </body>
+</html>
+
+//hapus
+
+<?php
+
+include 'konek.php';
+
+if(isset($_GET['id'])) {
+
+    $id = $_GET['id'];
+
+    $sql = "DELETE FROM spp WHERE id_spp = $id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+
+        header('Location:index.php?link=spp');
+    } else{
+        echo"<script>
+            alert('data gagal di hapus');
+        </script>";
+    }
+}
+
+if(isset($_GET['idsiswa'])) {
+
+    $id = $_GET['idsiswa'];
+
+    $sql = "DELETE FROM siswa WHERE nisn = $id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+
+        header('Location:index.php?link=siswa');
+    } else{
+        echo"<script>
+        alert('data gagal di hapus');
+    </script>";
+    }
+}
+
+if(isset($_GET['idpetugas'])) {
+
+    $id = $_GET['idpetugas'];
+
+    $sql = "DELETE FROM petugas WHERE id_petugas = $id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+
+        header('Location:index.php?link=petugas');
+    } else{
+        echo"<script>
+        alert('data gagal di hapus');
+    </script>";
+    }
+}
+
+if(isset($_GET['idkelas'])) {
+
+    $id = $_GET['idkelas'];
+
+    $sql = "DELETE FROM kelas WHERE id_kelas = $id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+
+        header('Location:index.php?link=kelas');
+    } else{
+        echo"<script>
+        alert('data gagal di hapus');
+    </script>";
+    }
+}
+
+if(isset($_GET['idpembayaran'])) {
+
+    $id = $_GET['idpembayaran'];
+
+    $sql = "DELETE FROM pembayaran WHERE id_pembayaran = $id";
+    $query = mysqli_query($conn,$sql);
+
+    if($query){
+
+        header('Location:index.php?link=pembayaran');
+    } else{
+        echo"<script>
+        alert('data gagal di hapus');
+    </script>";
+    }
+}
+?>
+// input
+<?php
+
+require 'konek.php';
+
+if(isset($_POST['kirim'])){
+
+    $nama_kelas = $_POST['nama_kelas'];
+    $kompetensi_keahlian = $_POST['kompetensi_keahlian'];
+
+    $sql = "INSERT INTO kelas (nama_kelas,kompetensi_keahlian)VALUES('$nama_kelas', '$kompetensi_keahlian')";
+    $query = mysqli_query($conn, $sql);
+
+    if($query){
+
+        header('Location:index.php?link=kelas');
+        
+    } else{
+
+        header('Location:input.kelas.php');
+
+    }
+}
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+
+<body>
+    <header>
+        <h3>daftar kelas</h3>
+    </header>
+
+    <form action="" method="POST">
+
+        <p>
+            <label for="nama_kelas">Nama Kelas: </label>
+            <input type="text" name="nama_kelas" id="nama_kelas">
+        </p>
+        <p>
+            <label for="kompetensi_keahlian">Kompetensi Keahlian: </label>
+            <input type="text" name="kompetensi_keahlian" id="kompetensi_keahlian">
+        </p>        
+        <p>
+            <button type="submit" name="kirim">Kirim</button>
+        </p>
+
+    </form>
+
+    </body>
+</html>
+
+//konek.php
+
+<?php
+
+$server = "localhost";
+$user = "root";
+$password = "";
+$nama_database = "db_spp";
+
+$conn = mysqli_connect($server, $user, $password, $nama_database);
+
+if( !$conn ){
+    die("Gagal terhubung dengan database: " . mysqli_connect_error());
+}
+
+// function tambah($data){
+
+//     global $conn;
+
+//     $nisn = $_POST['nisn'];
+//     $nis = $_POST['nis'];
+//     $nama = $_POST['nama'];
+//     $id_kelas =  $_POST['id_kelas'];
+//     $alamat = $_POST['alamat'];
+//     $no_telp = $_POST['no_telp'];
+//     $id_spp = $_POST['id_spp'];
+
+    
+// }
+
+
+function tambah($data) {
+
+    global $conn;
+    
+    $nisn = $data['nisn'];
+    $nis = $data['nis'];
+    $nama = $data['nama'];
+    $id_kelas = $data['id_kelas'];
+    $alamat = $data['alamat'];
+    $no_telp = $data['no_telp'];
+    $id_spp = $data['id_spp'];
+
+    
+    mysqli_query($conn, "INSERT INTO siswa 
+                    VALUES('$nisn', '$nis', '$nama', '$id_kelas', '$alamat','$no_telp','$id_spp')");                 
+
+        return mysqli_affected_rows($conn);
+}
+
+?>
